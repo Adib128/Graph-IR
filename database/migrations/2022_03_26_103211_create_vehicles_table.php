@@ -21,7 +21,7 @@ class CreateVehiclesTable extends Migration
             $table->string('type');
             $table->string('consumptionType');
             $table->string('transmission');
-            $table->date('purchaseDate');
+            $table->Date('purchaseDate');
             $table->timestamps();
         });
     }
