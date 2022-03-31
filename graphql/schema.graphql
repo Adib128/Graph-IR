@@ -54,6 +54,7 @@ type Vehicle {
     consumptionType: consumptionType!
     transmissionType: transmissionType!
     purchaseDate: DateTime!
+    issues: [Issue!]! @hasMany
 }
 
 "Create vehicle input"
@@ -87,6 +88,7 @@ type Issue {
     issueDate: DateTime! @rules(apply: ["required"])
     summary: String!
     description: String!
+    vehicle: Vehicle @belongsTo
 }
 
 "Create issue input"
@@ -95,6 +97,7 @@ input createIssueInput {
     issueDate: DateTime! @rules(apply: ["required"])
     summary: String!
     description: String!
+    vehicle_id: Int!
 }
 
 "Update issue input"
@@ -104,5 +107,6 @@ input updateIssueInput {
     issueDate: DateTime
     summary: String
     description: String
+    vehicle_id: Int
 }
 

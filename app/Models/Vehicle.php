@@ -18,4 +18,8 @@ class Vehicle extends Model
         'transmission',
         'purchaseDate'
     ];
+
+    public function issues(){
+        return $this->hasMany(Issue::class);
+    }
 }

@@ -13,6 +13,11 @@ class Issue extends Model
         'reference',
         'issueDate',
         'summary',
-        'description'
+        'description',
+        'vehicle_id'
     ];
+
+    public function vehicle(){
+        return $this->belongsTo(Vehicle::class);
+    }
 }
