@@ -3,47 +3,106 @@ scalar DateTime
     @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
 type Query {
+    "List multiple vehicles"
     vehicles: [Vehicle!] @all
-    vehicle(id: ID! @eq): Vehicle! @find
+    "Find a single vehicle by id or registrationNumber"
+    vehicle(id: ID @eq registrationNumber: Int @eq): Vehicle! @find
+
+    "List multiple issues"
+    issues: [Issue!] @all
+    "Find a single issue by id or reference"
+    issue(id: ID @eq reference: Int @eq): Issue! @find
 }
 
 type Mutation {
+    "Create new vehicle"
     createVehicle(input: createVehicleInput! @spread): Vehicle! @create
-    updateVehicle(id: ID!, input: createVehicleInput! @spread): Vehicle! @update
+    "Update specified vehicle by id"
+    updateVehicle(input: updateVehicleInput! @spread): Vehicle! @update
+    "Delete specified vehicle by id"
     deleteVehicle(id: ID!): Vehicle! @delete
+
+    "Create new issue"
+    createIssue(input: createIssueInput! @spread): Issue! @create
+    "Update specified issue by id"
+    updateIssue(input: updateIssueInput! @spread): Issue! @update
+    "Delete specified issue by id"
+    deleteIssue(id: ID!): Issue! @delete
 }
 
+"Transmission type enum"
+enum transmissionType {
+    Manual @enum(value: Manual)
+    SemiAutomatic @enum(value: SemiAutomatic)
+    Automatic @enum(value: Automatic)
+}
+
+"Consumption type enum"
+enum consumptionType {
+    Fuel @enum(value: Fuel)
+    Electric @enum(value: Electric)
+    Hybrid @enum(value: Hybrid)
+}
+
+"Vehicle Type"
 type Vehicle {
     id: ID!
-
     registrationNumber: Int!
-
     make: String!
-
     model: String!
-
     type: String!
-
-    consumptionType: String!
-
-    transmission: String!
-
+    consumptionType: consumptionType!
+    transmissionType: transmissionType!
     purchaseDate: DateTime!
 }
 
+"Create vehicle input"
 input createVehicleInput {
     registrationNumber: Int!
         @rules(apply: ["required", "unique:vehicles,registrationNumber"])
-
     make: String!
-
     model: String!
-
     type: String!
-
-    consumptionType: String!
-
-    transmission: String!
-
-    purchaseDate: DateTime! @rules(apply: ["required"])
+    consumptionType: consumptionType!
+    transmissionType: transmissionType!
+    purchaseDate: DateTime!
 }
+
+"Update vehicle input"
+input updateVehicleInput {
+    id: ID!
+    registrationNumber: Int @rules(apply: ["unique:vehicles,registrationNumber"])
+    make: String
+    model: String
+    type: String
+    consumptionType: consumptionType
+    transmissionType: transmissionType
+    purchaseDate: DateTime
+}
+
+"Issue type"
+type Issue {
+    id: ID!
+    reference: Int!
+    issueDate: DateTime! @rules(apply: ["required"])
+    summary: String!
+    description: String!
+}
+
+"Create issue input"
+input createIssueInput {
+    reference: Int! @rules(apply: ["required", "unique:issues,reference"])
+    issueDate: DateTime! @rules(apply: ["required"])
+    summary: String!
+    description: String!
+}
+
+"Update issue input"
+input updateIssueInput {
+    id: ID!
+    reference: Int @rules(apply: ["unique:issues,reference"])
+    issueDate: DateTime
+    summary: String
+    description: String
+}
+
