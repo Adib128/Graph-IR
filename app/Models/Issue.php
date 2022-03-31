@@ -20,4 +20,8 @@ class Issue extends Model
     public function vehicle(){
         return $this->belongsTo(Vehicle::class);
     }
+
+    public function repair(){
+        return $this->hasOne(Issue::class);
+    }
 }

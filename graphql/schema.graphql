@@ -6,12 +6,17 @@ type Query {
     "List multiple vehicles"
     vehicles: [Vehicle!] @all
     "Find a single vehicle by id or registrationNumber"
-    vehicle(id: ID @eq registrationNumber: Int @eq): Vehicle! @find
+    vehicle(id: ID @eq, registrationNumber: Int @eq): Vehicle! @find
 
     "List multiple issues"
     issues: [Issue!] @all
     "Find a single issue by id or reference"
-    issue(id: ID @eq reference: Int @eq): Issue! @find
+    issue(id: ID @eq, reference: Int @eq): Issue! @find
+
+    "List multiple repairs"
+    repairs: [Repair!] @all
+    "Find a single repair by id"
+    repair(id: ID @eq): Repair! @find
 }
 
 type Mutation {
@@ -28,6 +33,13 @@ type Mutation {
     updateIssue(input: updateIssueInput! @spread): Issue! @update
     "Delete specified issue by id"
     deleteIssue(id: ID!): Issue! @delete
+
+    "Create new repair"
+    createRepair(input: createRepairInput! @spread): Repair! @create
+    "Update specified repair by id"
+    updateRepair(input: updateRepairInput! @spread): Repair! @update
+    "Delete specified repair by id"
+    deleteRepair(id: ID!): Repair! @delete
 }
 
 "Transmission type enum"
@@ -72,7 +84,8 @@ input createVehicleInput {
 "Update vehicle input"
 input updateVehicleInput {
     id: ID!
-    registrationNumber: Int @rules(apply: ["unique:vehicles,registrationNumber"])
+    registrationNumber: Int
+        @rules(apply: ["unique:vehicles,registrationNumber"])
     make: String
     model: String
     type: String
@@ -89,6 +102,7 @@ type Issue {
     summary: String!
     description: String!
     vehicle: Vehicle @belongsTo
+    repair: Repair @hasOne
 }
 
 "Create issue input"
@@ -110,3 +124,31 @@ input updateIssueInput {
     vehicle_id: Int
 }
 
+"Repair type"
+type Repair {
+    id: ID!
+    repairDate: DateTime!
+    summary: String!
+    details: String!
+    cost: Float!
+    issue: Issue! @belongsTo
+}
+
+"Create repair input"
+input createRepairInput {
+    repairDate: DateTime! @rules(apply: ["required"])
+    summary: String!
+    details: String!
+    cost: Float!
+    issue_id: Int! 
+}
+
+"Update repair input"
+input updateRepairInput {
+    id: ID!
+    repairDate: DateTime
+    summary: String
+    details: String
+    cost: Float
+    issue_id: Int
+}
