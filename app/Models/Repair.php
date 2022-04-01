@@ -14,10 +14,15 @@ class Repair extends Model
         'summary',
         'details',
         'cost',
-        'issue_id'
+        'issue_id',
+        'vehicle_id'
     ];
 
     public function issue(){
         return $this->belongsTo(Issue::class);
+    }
+
+    public function vehicle(){
+        return $this->BelongsTo(Vehicle::class);
     }
 }

@@ -22,4 +22,8 @@ class Vehicle extends Model
     public function issues(){
         return $this->hasMany(Issue::class);
     }
+
+    public function repairs(){
+        return $this->hasMany(Repair::class);
+    }
 }

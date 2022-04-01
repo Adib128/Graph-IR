@@ -1,0 +1,31 @@
+"Repair type"
+type Repair {
+    id: ID!
+    repairDate: DateTime!
+    summary: String!
+    details: String!
+    cost: Float!
+    issue: Issue! @belongsTo
+    vehicle: Vehicle @belongsTo
+}
+
+"Create repair input"
+input createRepairInput {
+    repairDate: DateTime! @rules(apply: ["required"])
+    summary: String!
+    details: String!
+    cost: Float!
+    issue_id: Int!
+    vehicle_id: Int!
+}
+
+"Update repair input"
+input updateRepairInput {
+    id: ID!
+    repairDate: DateTime
+    summary: String
+    details: String
+    cost: Float
+    issue_id: Int
+    vehicle_id: Int
+}

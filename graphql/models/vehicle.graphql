@@ -1,0 +1,52 @@
+"Transmission type enum"
+enum transmissionType {
+    Manual @enum(value: Manual)
+    SemiAutomatic @enum(value: SemiAutomatic)
+    Automatic @enum(value: Automatic)
+}
+
+"Consumption type enum"
+enum consumptionType {
+    Fuel @enum(value: Fuel)
+    Electric @enum(value: Electric)
+    Hybrid @enum(value: Hybrid)
+}
+
+"Vehicle Type"
+type Vehicle {
+    id: ID!
+    registrationNumber: Int!
+    make: String!
+    model: String!
+    type: String!
+    consumptionType: consumptionType!
+    transmissionType: transmissionType!
+    purchaseDate: DateTime!
+    issues: [Issue!]! @hasMany
+    repairs: [Repair!] @hasMany
+}
+
+"Create vehicle input"
+input createVehicleInput {
+    registrationNumber: Int!
+        @rules(apply: ["required", "unique:vehicles,registrationNumber"])
+    make: String!
+    model: String!
+    type: String!
+    consumptionType: consumptionType!
+    transmissionType: transmissionType!
+    purchaseDate: DateTime!
+}
+
+"Update vehicle input"
+input updateVehicleInput {
+    id: ID!
+    registrationNumber: Int
+        @rules(apply: ["unique:vehicles,registrationNumber"])
+    make: String
+    model: String
+    type: String
+    consumptionType: consumptionType
+    transmissionType: transmissionType
+    purchaseDate: DateTime
+}

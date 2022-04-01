@@ -1,0 +1,29 @@
+"Issue type"
+type Issue {
+    id: ID!
+    reference: Int!
+    issueDate: DateTime! @rules(apply: ["required"])
+    summary: String!
+    description: String!
+    vehicle: Vehicle @belongsTo
+    repair: Repair @hasOne
+}
+
+"Create issue input"
+input createIssueInput {
+    reference: Int! @rules(apply: ["required", "unique:issues,reference"])
+    issueDate: DateTime! @rules(apply: ["required"])
+    summary: String!
+    description: String!
+    vehicle_id: Int!
+}
+
+"Update issue input"
+input updateIssueInput {
+    id: ID!
+    reference: Int @rules(apply: ["unique:issues,reference"])
+    issueDate: DateTime
+    summary: String
+    description: String
+    vehicle_id: Int
+}
