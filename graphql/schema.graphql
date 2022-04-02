@@ -4,19 +4,21 @@ scalar DateTime
 
 type Query {
     "List multiple vehicles"
-    vehicles: [Vehicle!] @all
+    vehicles: [Vehicle!] @all @guard(with: ["api"])
     "Find a single vehicle by id or registrationNumber"
-    vehicle(id: ID @eq, registrationNumber: Int @eq): Vehicle! @find
+    vehicle(id: ID @eq, registrationNumber: Int @eq): Vehicle!
+        @find
+        @guard(with: ["api"])
 
     "List multiple issues"
-    issues: [Issue!] @all
+    issues: [Issue!] @all @guard(with: ["api"])
     "Find a single issue by id or reference"
-    issue(id: ID @eq, reference: Int @eq): Issue! @find
+    issue(id: ID @eq, reference: Int @eq): Issue! @find @guard(with: ["api"])
 
     "List multiple repairs"
-    repairs: [Repair!] @all
+    repairs: [Repair!] @all @guard(with: ["api"])
     "Find a single repair by id"
-    repair(id: ID @eq): Repair! @find
+    repair(id: ID @eq): Repair! @find @guard(with: ["api"])
 }
 
 type Mutation {
@@ -40,6 +42,37 @@ type Mutation {
     updateRepair(input: updateRepairInput! @spread): Repair! @update
     "Delete specified repair by id"
     deleteRepair(id: ID!): Repair! @delete
+
+    "User login"
+    login(input: LoginInput @spread): AuthPayload!
+        @field(
+            resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\Login@resolve"
+        )
+        
+    "Refresh user token"
+    refreshToken(input: RefreshTokenInput @spread): RefreshTokenPayload!
+        @field(
+            resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\RefreshToken@resolve"
+        )
+
+    "User logout"
+    logout: LogoutResponse!
+        @field(
+            resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\Logout@resolve"
+        )
+
+    "Register new user"
+    register(input: RegisterInput @spread): RegisterResponse!
+        @field(
+            resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\Register@resolve"
+        )
+
+    "Update user password"
+    updatePassword(input: UpdatePassword! @spread): UpdatePasswordResponse!
+        @field(
+            resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\UpdatePassword@resolve"
+        )
+        @guard(with: ["api"])
 }
 
 #import models/*.graphql
